@@ -9,7 +9,6 @@ import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,16 +24,13 @@ public class MainActivity extends FragmentActivity implements
     // Tab titles
     private String[] tabs = { "Reminders", "Map" };
 
-    //new
-    public static FragmentManager fragmentManager;
-
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fragmentManager = getSupportFragmentManager();
+
 
         // Initialization
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -109,13 +105,13 @@ public class MainActivity extends FragmentActivity implements
         switch ( item.getItemId() ) {
 
             case R.id.menu_add:
-                Toast.makeText(this, "Add Under Construction", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Add Clicked", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_settings:
-                Toast.makeText(this, "Settings Under Construction", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_help:
-                Toast.makeText(this, "Help Under Construction", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Help Clicked", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

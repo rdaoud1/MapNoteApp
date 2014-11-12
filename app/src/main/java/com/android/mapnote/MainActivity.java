@@ -1,3 +1,5 @@
+//Android Studio sucks!
+
 package com.android.mapnote;
 
 import com.android.mapnote.R;

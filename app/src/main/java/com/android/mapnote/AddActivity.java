@@ -1,4 +1,4 @@
-package com.android.mapnote.adapter;
+package com.android.mapnote;
 
 import com.android.mapnote.adapter.TabsPagerAdapter;
 import android.annotation.SuppressLint;
@@ -10,9 +10,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public class AddActivity extends FragmentActivity {
         final EditText eText = (EditText) findViewById(R.id.reminder);
         final Button btn = (Button) findViewById(R.id.addReminder);
 
-        btn.setOnClickListener(new OnClickListener() {
+        btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String str = eText.getText().toString();
                 ArrayList<String> rems = new ArrayList<String>();
@@ -44,7 +45,8 @@ public class AddActivity extends FragmentActivity {
                 String items = rems.toString();
                 String location = str.substring(str.indexOf("@"));
 
-                Toast.makeText(this, "\n Location: " + location + "Items: " + items, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "\n Location: " + location + "Items: " + items, Toast.LENGTH_LONG).show();
+
             }
         });
     }

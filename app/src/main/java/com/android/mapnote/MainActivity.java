@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.content.Intent;
 
 @SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity implements
@@ -107,7 +108,8 @@ public class MainActivity extends FragmentActivity implements
         switch ( item.getItemId() ) {
 
             case R.id.menu_add:
-                Toast.makeText(this, "Add Clicked", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, AddActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_settings:
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();

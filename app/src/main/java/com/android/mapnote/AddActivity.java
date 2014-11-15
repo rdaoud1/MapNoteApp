@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -19,8 +20,10 @@ import java.util.ArrayList;
 
 /**
  * Created by Artemy on 13/11/2014.
+ * Add Validation later
  */
 public class AddActivity extends FragmentActivity {
+    public final static String EXTRA_MESSAGE = "com.android.mapnote.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,20 +35,26 @@ public class AddActivity extends FragmentActivity {
             public void onClick(View v) {
                 String str = eText.getText().toString();
                 ArrayList<String> rems = new ArrayList<String>();
-                int start = 0;
-                int end = str.indexOf(",");
-                rems.add(str.substring(start, end));
+                int start = 0, end = 0;
+                rems.add(str.substring(str.indexOf("@"))); //get location. will always be the first item in the array.
+
                 while (start != -1) {
-                    start = end;
                     end = str.indexOf(",", start);
-                    if(end == -1)
+                    if(end == -1) {
+                        end = str.indexOf("@", start);
+                        rems.add(str.substring(start, end).trim());
                         break;
-                    rems.add(str.substring(start, end));
+                    }
+                    rems.add(str.substring(start, end).trim());
+                    start = end+2;
                 }
                 String items = rems.toString();
-                String location = str.substring(str.indexOf("@"));
+                //String location = str.substring(str.indexOf("@"));
+                //Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), RemindersFragment.class);
+                intent.putExtra(EXTRA_MESSAGE, rems);
+                startActivity(intent);
 
-                Toast.makeText(getApplicationContext(), "\n Location: " + location + "Items: " + items, Toast.LENGTH_LONG).show();
 
             }
         });

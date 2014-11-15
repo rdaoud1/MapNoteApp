@@ -22,7 +22,7 @@ public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
 
     public static FragmentManager fragmentManager;
-
+    //
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;

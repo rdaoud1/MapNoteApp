@@ -1,7 +1,7 @@
 package com.android.mapnote.adapter;
 
 import com.android.mapnote.RemindersFragment;
-import com.android.mapnote.MapFragment;
+import com.android.mapnote.MapsFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,7 +21,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
                 return new RemindersFragment();
             case 1:
                 // Maps fragment activity
-                return new MapFragment();
+                return new MapsFragment();
         }
 
         return null;

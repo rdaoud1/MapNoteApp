@@ -11,6 +11,7 @@ import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
+
+    public static FragmentManager fragmentManager;
 
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
@@ -42,6 +45,8 @@ public class MainActivity extends FragmentActivity implements
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        fragmentManager = getSupportFragmentManager();
 
         // Adding Tabs
         for (String tab_name : tabs) {

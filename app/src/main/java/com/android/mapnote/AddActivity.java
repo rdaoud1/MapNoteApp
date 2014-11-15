@@ -7,6 +7,7 @@ import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -36,7 +37,7 @@ public class AddActivity extends FragmentActivity {
                 String str = eText.getText().toString();
                 ArrayList<String> rems = new ArrayList<String>();
                 int start = 0, end = 0;
-                rems.add(str.substring(str.indexOf("@"))); //get location. will always be the first item in the array.
+                //rems.add(str.substring(str.indexOf("@"))); //get location. will always be the first item in the array.
 
                 while (start != -1) {
                     end = str.indexOf(",", start);
@@ -49,14 +50,38 @@ public class AddActivity extends FragmentActivity {
                     start = end+2;
                 }
                 String items = rems.toString();
-                //String location = str.substring(str.indexOf("@"));
-                //Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), RemindersFragment.class);
-                intent.putExtra(EXTRA_MESSAGE, rems);
-                startActivity(intent);
+                String location = str.substring(str.indexOf("@"));
+                Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();
+//                DetailsFragment details = new DetailsFragment();
+//                details.setArguments(getIntent().getExtras());
+//                getFragmentManager().beginTransaction().add(android.R.id.content, details).commit();
+
 
 
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu ) {
+
+        // inflate the menu: add action items to the action bar if it is visible
+        getMenuInflater().inflate(R.menu.simple_action_bar, menu);
+        return true;
+    }
+
+    /* event handling of the selection of an action item (menu item)
+     * - only 3 out 4 action items are handled
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch ( item.getItemId() ) {
+            case R.id.menu_help:
+                DialogFragment dialog = new HelpDialogFragment();
+                dialog.show(getSupportFragmentManager(), "HelpDialogFragment");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -115,7 +116,8 @@ public class MainActivity extends FragmentActivity implements
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_help:
-                Toast.makeText(this, "Help Clicked", Toast.LENGTH_LONG).show();
+                DialogFragment dialog = new HelpDialogFragment();
+                dialog.show(getSupportFragmentManager(), "HelpDialogFragment");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

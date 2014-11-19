@@ -41,14 +41,14 @@
         </activity>
         <activity android:name="AddActivity"></activity>
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <!-- Goolge Maps Android API Key -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAeCZvAYwwvQX6P3vjGU3297d8eYpyXotk" />
-
-       <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="AIzaSyChzmGrnZJFtqO3pcrMA7x4Tt54AdOAoTw" />
 
     </application>
 

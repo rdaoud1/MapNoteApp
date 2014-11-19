@@ -23,6 +23,8 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import javax.net.ssl.HttpsURLConnection;
+
 
 public class MapsFragment extends Fragment{
 

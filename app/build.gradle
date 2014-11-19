@@ -2,12 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'MyAndroidKey'
-            keyPassword 'rafiD1993'
-            storeFile file('C:/Users/Rafid Daoud/AndroidStudioProjects/MapNoteApp/android.jks')
-            storePassword 'rafiD1993'
-        }
     }
     compileSdkVersion 17
     buildToolsVersion "20.0.0"
@@ -22,7 +16,6 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
         }
     }
 }

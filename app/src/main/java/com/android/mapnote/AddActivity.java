@@ -1,5 +1,6 @@
 package com.android.mapnote;
 
+import com.android.mapnote.adapter.DBAdapter;
 import com.android.mapnote.adapter.TabsPagerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 
@@ -31,13 +33,16 @@ public class AddActivity extends FragmentActivity {
         setContentView(R.layout.add_reminder);
         final EditText eText = (EditText) findViewById(R.id.reminder);
         final Button btn = (Button) findViewById(R.id.addReminder);
+        final DBAdapter db = new DBAdapter(this);
 
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String str = eText.getText().toString();
                 ArrayList<String> rems = new ArrayList<String>();
                 int start = 0, end = 0;
-                //rems.add(str.substring(str.indexOf("@"))); //get location. will always be the first item in the array.
+                db.open();
+                long id;
+                rems.add(str.substring(str.indexOf("@"))); //get location. will always be the first item in the array.
 
                 while (start != -1) {
                     end = str.indexOf(",", start);
@@ -51,7 +56,12 @@ public class AddActivity extends FragmentActivity {
                 }
                 String items = rems.toString();
                 String location = str.substring(str.indexOf("@"));
-                Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();
+                for(int i = 1; i < rems.size(); i++)
+                    id = db.insertContact(rems.get(0),rems.get(i));
+                Cursor c = db.getAllContacts();
+                displayCursor( c );
+                db.close();
+                //Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();
 //                DetailsFragment details = new DetailsFragment();
 //                details.setArguments(getIntent().getExtras());
 //                getFragmentManager().beginTransaction().add(android.R.id.content, details).commit();
@@ -83,5 +93,22 @@ public class AddActivity extends FragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private void displayCursor( Cursor c ){
+
+        if (c.moveToFirst())
+        {
+            do {
+                displayContact(c);
+            } while (c.moveToNext());
+        }
+    }
+    private void displayContact( Cursor c )
+    {
+        Toast.makeText( this,
+                "id: " + c.getString(0) + "\n" +
+                        "Location: " + c.getString(1) + "\n" +
+                        "Item:  " + c.getString(2),
+                Toast.LENGTH_LONG).show();
     }
 }

@@ -20,19 +20,19 @@ public class DBAdapter {
 
     // String constants for the columns of a database table
     static final String KEY_ROWID = "_id";
-    static final String KEY_NAME  = "name";
-    static final String KEY_EMAIL = "email";
+    static final String KEY_LOCATION  = "location";
+    static final String KEY_ITEM = "item";
     static final String TAG       = "DBAdapter"; // for LogCat
 
     // String constants for database name, database version, and table name
-    static final String DATABASE_NAME = "MyDB";
-    static final String DATABASE_TABLE = "contacts";
+    static final String DATABASE_NAME = "MapNoteDB";
+    static final String DATABASE_TABLE = "reminders";
     static final int DATABASE_VERSION = 2;
 
     // SQL statement for creating a database schema
     static final String DATABASE_CREATE =
-            "create table contacts ( _id integer primary key autoincrement, " +
-                    "name text not null, email text not null );";
+            "create table reminders ( _id integer primary key autoincrement, " +
+                    "location text not null, item text not null );";
 
     final Context context;   // context for database access
 
@@ -74,7 +74,7 @@ public class DBAdapter {
             Log.i( TAG, "Upgrading database from version " + oldVersion + " to " +
                     newVersion + ", which will destroy all old data");
 
-            db.execSQL("DROP TABLE IF EXISTS contacts");
+            db.execSQL("DROP TABLE IF EXISTS reminders");
 
             onCreate( db ); // invoke SQLiteOpenHelper's onCreate() method
         }
@@ -100,38 +100,38 @@ public class DBAdapter {
 
     //--- 3. insert a contact into the database ---
     //       - ContentValues: key/value pairs
-    public long insertContact(String name, String email)
+    public long insertReminders(String name, String email)
     {
         ContentValues initialValues = new ContentValues();
-        initialValues.put( KEY_NAME, name );
-        initialValues.put( KEY_EMAIL, email );
+        initialValues.put( KEY_LOCATION, name );
+        initialValues.put( KEY_ITEM, email );
 
         return db.insert( DATABASE_TABLE, null, initialValues );
     }
 
     //--- 4. deletes a particular contact from the database ---
-    public boolean deleteContact(long rowId)
+    public boolean deleteReminders(long rowId)
     {
         return db.delete( DATABASE_TABLE, KEY_ROWID + "=" + rowId, null ) > 0;
     }
 
     //---5. retrieves all the contacts from the databsae ---
     //      - Cursor object: a pointer to the result set of the query
-    public Cursor getAllContacts()
+    public Cursor getAllReminders()
     {
         return db.query( DATABASE_TABLE,
-                new String[] { KEY_ROWID, KEY_NAME, KEY_EMAIL },
+                new String[] { KEY_ROWID, KEY_LOCATION, KEY_ITEM },
                 null, null, null, null, null);
     }
 
     //--- 6. retrieve a particular contact from the database ---
     //       - Cursor object: a pointer to the result set of the query
-    public Cursor getContact(long rowId) throws SQLException
+    public Cursor getReminder(long rowId) throws SQLException
     {
         Cursor mCursor =
                 db.query( true,
                         DATABASE_TABLE,
-                        new String[] {KEY_ROWID, KEY_NAME, KEY_EMAIL},
+                        new String[] {KEY_ROWID, KEY_LOCATION, KEY_ITEM},
                         KEY_ROWID + "=" + rowId,
                         null, null, null, null, null );
 
@@ -141,11 +141,11 @@ public class DBAdapter {
     }
 
     //--- 7. updates a contact in the database ---
-    public boolean updateContact(long rowId, String name, String email)
+    public boolean updateReminder(long rowId, String location, String item)
     {
         ContentValues args = new ContentValues();  // key/value pairs
-        args.put(KEY_NAME, name);
-        args.put(KEY_EMAIL, email);
+        args.put(KEY_LOCATION, location);
+        args.put(KEY_ITEM, item);
 
         return db.update( DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }

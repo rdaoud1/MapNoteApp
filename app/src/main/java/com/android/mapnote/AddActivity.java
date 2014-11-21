@@ -1,16 +1,10 @@
 package com.android.mapnote;
 
 import com.android.mapnote.adapter.DBAdapter;
-import com.android.mapnote.adapter.TabsPagerAdapter;
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,8 +51,8 @@ public class AddActivity extends FragmentActivity {
                 String items = rems.toString();
                 String location = str.substring(str.indexOf("@"));
                 for(int i = 1; i < rems.size(); i++)
-                    id = db.insertContact(rems.get(0),rems.get(i));
-                Cursor c = db.getAllContacts();
+                    id = db.insertReminders(rems.get(0), rems.get(i));
+                Cursor c = db.getAllReminders();
                 displayCursor( c );
                 db.close();
                 //Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();

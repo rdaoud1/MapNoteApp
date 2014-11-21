@@ -4,26 +4,30 @@ package com.android.mapnote;
 
 import com.android.mapnote.R;
 
+import com.android.mapnote.adapter.DBAdapter;
 import com.android.mapnote.adapter.TabsPagerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.app.ListActivity;
 
 @SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity {
 
-    private ViewPager viewPager;
-    private TabsPagerAdapter mAdapter;
+    private ListActivity la;
     private ActionBar actionBar;
     // Tab titles
     private String[] tabs = { "Reminders", "Map" };
@@ -34,60 +38,20 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reminders);
 
+        final DBAdapter db = new DBAdapter(this);
 
+        db.open();
+        Cursor c = db.getAllReminders();
 
-        // Initialization
-//        viewPager = (ViewPager) findViewById(R.id.pager);
-//        actionBar = getActionBar();
-//        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-//
-//        viewPager.setAdapter(mAdapter);
-//        actionBar.setHomeButtonEnabled(false);
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//
-//        // Adding Tabs
-//        for (String tab_name : tabs) {
-//            actionBar.addTab(actionBar.newTab().setText(tab_name)
-//                    .setTabListener(this));
+        ListView lstView = la.getListView();
+
+        lstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); // one choice
+
+        lstView.setTextFilterEnabled(true); // filter the children according to user input
+
+        la.setListAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_checked, rems));
+
         }
-
-//        /**
-//         * on swiping the viewpager make respective tab selected
-//         * */
-//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                // on changing the page
-//                // make respected tab selected
-//                actionBar.setSelectedNavigationItem(position);
-//            }
-//
-//            @Override
-//            public void onPageScrolled(int arg0, float arg1, int arg2) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int arg0) {
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-//
-//    }
-//
-//    @Override
-//    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-//        // on tab selected
-//        // show respected fragment view
-//        viewPager.setCurrentItem(tab.getPosition());
-//    }
-//
-//    @Override
-//    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-//    }
 
     /* add actions items to the action bar
      * - inflate /res/menu/simple_action_bar.xml
@@ -123,5 +87,16 @@ public class MainActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void displayCursor( Cursor c ){
+
+        if (c.moveToFirst())
+        {
+            do {
+                c.getString(cursor.getColumnIndex("location"));
+            } while (c.moveToNext());
+        }
+    }
+
 
 }

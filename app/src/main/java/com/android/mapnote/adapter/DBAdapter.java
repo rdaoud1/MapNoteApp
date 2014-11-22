@@ -126,17 +126,18 @@ public class DBAdapter {
 
     //--- 6. retrieve a particular contact from the database ---
     //       - Cursor object: a pointer to the result set of the query
-    public Cursor getReminder(long rowId) throws SQLException
+    public Cursor getReminder(String location) throws SQLException
     {
         Cursor mCursor =
                 db.query( true,
                         DATABASE_TABLE,
-                        new String[] {KEY_ROWID, KEY_LOCATION, KEY_ITEM},
-                        KEY_ROWID + "=" + rowId,
-                        null, null, null, null, null );
+                        null,
+                        "location=?",
+                        new String[] {location},
+                        null, null, null, null);
 
         if ( mCursor != null ) { mCursor.moveToFirst(); } // move the cursor to the first row
-
+        //Log.d("cursor",mCursor.getString(mCursor.getColumnIndex("item")));
         return mCursor;
     }
 

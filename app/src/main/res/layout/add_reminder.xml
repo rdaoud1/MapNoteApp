@@ -6,11 +6,12 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
+        android:layout_height="30dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=""
+        android:textColor="#ff000000"
         android:id="@+id/reminder"
-        android:layout_weight="0.24" />
+        android:layout_weight="0.08" />
 
     <Button
         android:layout_width="159dp"

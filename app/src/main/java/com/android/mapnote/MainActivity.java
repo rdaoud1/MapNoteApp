@@ -16,41 +16,54 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.app.ListActivity;
 
-@SuppressLint("NewApi")
-public class MainActivity extends FragmentActivity {
+import java.util.ArrayList;
 
-    private ListActivity la;
+@SuppressLint("NewApi")
+public class MainActivity extends ListActivity {
+
+    private FragmentActivity fa;
     private ActionBar actionBar;
+    private static final String TAG = "MainActivity";
     // Tab titles
-    private String[] tabs = { "Reminders", "Map" };
+    public final DBAdapter db = new DBAdapter(this);
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reminders);
-
-        final DBAdapter db = new DBAdapter(this);
-
         db.open();
-        Cursor c = db.getAllReminders();
-
-        ListView lstView = la.getListView();
+        Log.d(TAG, "getting reminders");
+        Cursor c = db.getReminder("@staples");
+        TextView eText = (TextView) findViewById(R.id.location);
+        eText.append("@staples");
+        ArrayList<String> rems = new ArrayList<String>();
+        Log.d(TAG, "going into loop");
+        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            // The Cursor is now set to the right position
+            rems.add(c.getString(2));
+            Log.d(TAG, "id: ");
+            Log.d(TAG, c.getString(2));
+        }
+        Log.d(TAG, "exit loop");
+        ListView lstView = getListView();
 
         lstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); // one choice
 
         lstView.setTextFilterEnabled(true); // filter the children according to user input
 
-        la.setListAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_checked, rems));
-
+        setListAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list, rems));
+        db.close();
         }
 
     /* add actions items to the action bar
@@ -81,22 +94,11 @@ public class MainActivity extends FragmentActivity {
                 return true;
             case R.id.menu_help:
                 DialogFragment dialog = new HelpDialogFragment();
-                dialog.show(getSupportFragmentManager(), "HelpDialogFragment");
+                dialog.show(fa.getSupportFragmentManager(), "HelpDialogFragment");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private void displayCursor( Cursor c ){
-
-        if (c.moveToFirst())
-        {
-            do {
-                c.getString(cursor.getColumnIndex("location"));
-            } while (c.moveToNext());
-        }
-    }
-
 
 }

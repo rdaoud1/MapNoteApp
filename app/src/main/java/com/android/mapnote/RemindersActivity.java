@@ -1,6 +1,18 @@
-//Android Studio sucks!
-
 package com.android.mapnote;
+
+import com.android.mapnote.R;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import com.android.mapnote.R;
 
@@ -19,7 +31,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,13 +41,11 @@ import android.app.ListActivity;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class MainActivity extends ListActivity {
+public class RemindersActivity extends ListActivity {
 
     private FragmentActivity fa;
     private ActionBar actionBar;
     private static final String TAG = "MainActivity";
-    public final static String EXTRA_MESSAGE = "com.android.mapnote.MESSAGE";
-
     // Tab titles
     public final DBAdapter db = new DBAdapter(this);
 
@@ -45,11 +54,13 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reminders);
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         db.open();
-        Log.d(TAG, "getting locations");
-        Cursor c = db.getLocations();
+        Log.d(TAG, "getting reminders");
+        Cursor c = db.getReminder(message);
         TextView eText = (TextView) findViewById(R.id.location);
-        eText.append("Reminder Locations");
+        eText.append(message);
         ArrayList<String> rems = new ArrayList<String>();
         Log.d(TAG, "going into loop");
         for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -61,26 +72,17 @@ public class MainActivity extends ListActivity {
         Log.d(TAG, "exit loop");
         ListView lstView = getListView();
 
-        lstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); // one choice
+        lstView.setChoiceMode(ListView.CHOICE_MODE_NONE); // no choice
 
         lstView.setTextFilterEnabled(true); // filter the children according to user input
 
         setListAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list, rems));
         db.close();
-        }
+    }
 
     /* add actions items to the action bar
      * - inflate /res/menu/simple_action_bar.xml
      */
-
-    public void onListItemClick(ListView parent, View v, int position, long id )
-    {
-        Intent intent = new Intent(this, RemindersActivity.class);
-        String message = rems.get(position);
-        intent.putExtra(EXTRA_MESSAGE, message);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu( Menu menu ) {
 

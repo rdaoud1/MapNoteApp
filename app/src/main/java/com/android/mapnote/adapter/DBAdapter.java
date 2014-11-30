@@ -141,6 +141,16 @@ public class DBAdapter {
         return mCursor;
     }
 
+    public Cursor getLocations() throws SQLException
+    {
+        Cursor mCursor =
+                db.rawQuery("SELECT DISTINCT location FROM reminders", null);
+
+        if ( mCursor != null ) { mCursor.moveToFirst(); } // move the cursor to the first row
+        //Log.d("cursor",mCursor.getString(mCursor.getColumnIndex("item")));
+        return mCursor;
+    }
+
     //--- 7. updates a contact in the database ---
     public boolean updateReminder(long rowId, String location, String item)
     {

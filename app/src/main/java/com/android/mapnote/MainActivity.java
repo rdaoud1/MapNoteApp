@@ -54,9 +54,9 @@ public class MainActivity extends ListActivity {
         Log.d(TAG, "going into loop");
         for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             // The Cursor is now set to the right position
-            rems.add(c.getString(2));
+            rems.add(c.getString(0));
             Log.d(TAG, "id: ");
-            Log.d(TAG, c.getString(2));
+            Log.d(TAG, c.getString(0));
         }
         Log.d(TAG, "exit loop");
         ListView lstView = getListView();
@@ -73,12 +73,12 @@ public class MainActivity extends ListActivity {
      * - inflate /res/menu/simple_action_bar.xml
      */
 
-    public void onListItemClick(ListView parent, View v, int position, long id )
-    {
-        Intent intent = new Intent(this, RemindersActivity.class);
-        String message = rems.get(position);
-        intent.putExtra(EXTRA_MESSAGE, message);
-    }
+//    public void onListItemClick(ListView parent, View v, int position, long id )
+//    {
+//        Intent intent = new Intent(this, RemindersActivity.class);
+//        String message = rems.get(position);
+//        intent.putExtra(EXTRA_MESSAGE, message);
+//    }
 
 
     @Override

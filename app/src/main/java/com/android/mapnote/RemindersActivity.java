@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.view.View.OnLongClickListener;
 
 import java.util.ArrayList;
 
 import com.android.mapnote.R;
 
 import com.android.mapnote.adapter.DBAdapter;
-import com.android.mapnote.adapter.TabsPagerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -107,9 +107,9 @@ public class RemindersActivity extends ListActivity {
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_help:
-                DialogFragment dialog = new HelpDialogFragment();
-                dialog.show(fa.getSupportFragmentManager(), "HelpDialogFragment");
-                return true;
+//                DialogFragment dialog = new HelpDialogFragment();
+//                dialog.show(fa.getSupportFragmentManager(), "HelpDialogFragment");
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

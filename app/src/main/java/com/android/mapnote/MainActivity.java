@@ -5,7 +5,6 @@ package com.android.mapnote;
 import com.android.mapnote.R;
 
 import com.android.mapnote.adapter.DBAdapter;
-import com.android.mapnote.adapter.TabsPagerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -32,13 +31,14 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class MainActivity extends ListActivity {
 
-    private FragmentActivity fa;
+    private FragmentActivity fa = new FragmentActivity();
     private ActionBar actionBar;
     private static final String TAG = "MainActivity";
     public final static String EXTRA_MESSAGE = "com.android.mapnote.MESSAGE";
 
     // Tab titles
     public final DBAdapter db = new DBAdapter(this);
+    private ArrayList<String> rems = new ArrayList<String>();
 
     @SuppressLint("NewApi")
     @Override
@@ -49,8 +49,7 @@ public class MainActivity extends ListActivity {
         Log.d(TAG, "getting locations");
         Cursor c = db.getLocations();
         TextView eText = (TextView) findViewById(R.id.location);
-        eText.append("Reminder Locations");
-        ArrayList<String> rems = new ArrayList<String>();
+        eText.setText("Reminder Locations");
         Log.d(TAG, "going into loop");
         for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             // The Cursor is now set to the right position
@@ -73,12 +72,13 @@ public class MainActivity extends ListActivity {
      * - inflate /res/menu/simple_action_bar.xml
      */
 
-//    public void onListItemClick(ListView parent, View v, int position, long id )
-//    {
-//        Intent intent = new Intent(this, RemindersActivity.class);
-//        String message = rems.get(position);
-//        intent.putExtra(EXTRA_MESSAGE, message);
-//    }
+    public void onListItemClick(ListView parent, View v, int position, long id )
+    {
+        Intent intent = new Intent(this, RemindersActivity.class);
+        String message = rems.get(position);
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -104,10 +104,10 @@ public class MainActivity extends ListActivity {
             case R.id.menu_settings:
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.menu_help:
-                DialogFragment dialog = new HelpDialogFragment();
-                dialog.show(fa.getSupportFragmentManager(), "HelpDialogFragment");
-                return true;
+//            case R.id.menu_help:
+//                DialogFragment dialog = new HelpDialogFragment();
+//                dialog.show(fa.getSupportFragmentManager(), "HelpDialogFragment");
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

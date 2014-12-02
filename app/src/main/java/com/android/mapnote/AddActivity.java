@@ -88,6 +88,8 @@ public class AddActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //Toast methods to display database contents
     private void displayCursor( Cursor c ){
 
         if (c.moveToFirst())

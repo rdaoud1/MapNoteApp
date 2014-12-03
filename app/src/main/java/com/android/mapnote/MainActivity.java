@@ -28,7 +28,7 @@ public class MainActivity extends ListActivity {
     private ActionBar actionBar;
     private static final String TAG = "MainActivity";
     public final static String EXTRA_MESSAGE = "com.android.mapnote.MESSAGE";
-
+    private Intent serviceIntent;
     // Tab titles
     public final DBAdapter db = new DBAdapter(this);
     private ArrayList<String> rems = new ArrayList<String>();
@@ -38,6 +38,12 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.locations);
+
+        //explicit intent
+        serviceIntent = new Intent( getBaseContext(),
+                LocationService.class);
+
+
         db.open();
         Log.d(TAG, "getting locations");
         Cursor c = db.getLocations();

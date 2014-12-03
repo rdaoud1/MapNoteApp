@@ -2,19 +2,12 @@
 
 package com.android.mapnote;
 
-import com.android.mapnote.R;
-
 import com.android.mapnote.adapter.DBAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +37,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_reminders);
+        setContentView(R.layout.locations);
         db.open();
         Log.d(TAG, "getting locations");
         Cursor c = db.getLocations();
@@ -101,7 +94,7 @@ public class MainActivity extends ListActivity {
                 Intent intent = new Intent(this, AddActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.menu_settings:
+            case R.id.menu_map:
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
                 return true;
 //            case R.id.menu_help:

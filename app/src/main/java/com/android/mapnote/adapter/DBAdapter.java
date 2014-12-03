@@ -110,9 +110,9 @@ public class DBAdapter {
     }
 
     //--- 4. deletes a particular contact from the database ---
-    public boolean deleteReminders(long rowId)
+    public boolean deleteReminders(String location)
     {
-        return db.delete( DATABASE_TABLE, KEY_ROWID + "=" + rowId, null ) > 0;
+        return db.delete( DATABASE_TABLE, KEY_LOCATION + " = ?", new String[] { location }) > 0;
     }
 
     //---5. retrieves all the contacts from the databsae ---

@@ -2,6 +2,7 @@ package com.android.mapnote;
 
 import com.android.mapnote.adapter.DBAdapter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -53,8 +54,10 @@ public class AddActivity extends FragmentActivity {
                 for(int i = 1; i < rems.size(); i++)
                     id = db.insertReminders(rems.get(0), rems.get(i));
                 Cursor c = db.getAllReminders();
-                displayCursor( c );
+                //displayCursor( c );
                 db.close();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
                 //Toast.makeText(getApplicationContext(), "Location: " + location + "\n Items: " + items, Toast.LENGTH_LONG).show();
 //                DetailsFragment details = new DetailsFragment();
 //                details.setArguments(getIntent().getExtras());
@@ -69,7 +72,7 @@ public class AddActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu( Menu menu ) {
 
         // inflate the menu: add action items to the action bar if it is visible
-        getMenuInflater().inflate(R.menu.simple_action_bar, menu);
+        getMenuInflater().inflate(R.menu.add_action_bar, menu);
         return true;
     }
 

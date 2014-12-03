@@ -1,44 +1,25 @@
 package com.android.mapnote;
 
-import com.android.mapnote.R;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.view.View.OnLongClickListener;
 
 import java.util.ArrayList;
-
-import com.android.mapnote.R;
 
 import com.android.mapnote.adapter.DBAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.content.Intent;
 import android.app.ListActivity;
-
-import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class RemindersActivity extends ListActivity {
@@ -53,9 +34,9 @@ public class RemindersActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_reminders);
+        setContentView(R.layout.reminders);
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        final String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         db.open();
         Log.d(TAG, "getting reminders");
         Cursor c = db.getReminder(message);
@@ -77,6 +58,18 @@ public class RemindersActivity extends ListActivity {
         lstView.setTextFilterEnabled(true); // filter the children according to user input
 
         setListAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list, rems));
+
+        Button button = (Button) findViewById(R.id.delete);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.open();
+                db.deleteReminders(message);
+                db.close();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
         db.close();
     }
 
@@ -103,7 +96,7 @@ public class RemindersActivity extends ListActivity {
                 Intent intent = new Intent(this, AddActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.menu_settings:
+            case R.id.menu_map:
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_help:

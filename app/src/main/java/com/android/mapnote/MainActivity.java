@@ -40,9 +40,8 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.locations);
 
         //explicit intent
-        serviceIntent = new Intent( getBaseContext(),
-                LocationService.class);
-
+        serviceIntent = new Intent( getBaseContext(), LocationService.class);
+        startService( serviceIntent );
 
         db.open();
         Log.d(TAG, "getting locations");

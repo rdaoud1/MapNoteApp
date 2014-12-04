@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/MapNote.iml" filepath="$PROJECT_DIR$/MapNote.iml" />
       <module fileurl="file://$PROJECT_DIR$/MapNoteApp.iml" filepath="$PROJECT_DIR$/MapNoteApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/libs/libs.iml" filepath="$PROJECT_DIR$/libraries/libs/libs.iml" />
     </modules>
   </component>
 </project>

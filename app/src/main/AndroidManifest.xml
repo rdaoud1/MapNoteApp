@@ -30,6 +30,12 @@
                 <action android:name="com.android.mapnote.LocationService" />
             </intent-filter>
         </service>
+
+        <!-- Goolge Maps Android API Key -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyChzmGrnZJFtqO3pcrMA7x4Tt54AdOAoTw" />
+
     </application>
 
 </manifest>

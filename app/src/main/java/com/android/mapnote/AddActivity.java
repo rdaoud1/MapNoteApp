@@ -3,9 +3,13 @@ package com.android.mapnote;
 import com.android.mapnote.adapter.DBAdapter;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +18,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.database.Cursor;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Artemy on 13/11/2014.
@@ -30,9 +37,11 @@ public class AddActivity extends FragmentActivity {
         final Button btn = (Button) findViewById(R.id.addReminder);
         final DBAdapter db = new DBAdapter(this);
 
+
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String str = eText.getText().toString();
+                String geodata ="";
                 ArrayList<String> rems = new ArrayList<String>();
                 int start = 0, end = 0;
                 db.open();
@@ -50,11 +59,16 @@ public class AddActivity extends FragmentActivity {
                     start = end+2;
                 }
                 String items = rems.toString();
-                String location = str.substring(str.indexOf("@"));
+                final String location = str.substring(str.indexOf("@"));
+
+
+                geodata = run(location);
+
+
                 for(int i = 1; i < rems.size(); i++)
-                    id = db.insertReminders(rems.get(0), rems.get(i));
+                    id = db.insertReminders(rems.get(0), rems.get(i), geodata);
                 Cursor c = db.getAllReminders();
-                //displayCursor( c );
+                displayCursor( c );
                 db.close();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
@@ -106,8 +120,38 @@ public class AddActivity extends FragmentActivity {
     {
         Toast.makeText( this,
                 "id: " + c.getString(0) + "\n" +
-                        "Location: " + c.getString(1) + "\n" +
-                        "Item:  " + c.getString(2),
+                "Location: " + c.getString(1) + "\n" +
+                "Item:  " + c.getString(2) + "\n" +
+                "CODE:" + c.getString(3),
                 Toast.LENGTH_LONG).show();
+    }
+
+    public String run(String location)
+    {
+        String geodata="";
+        Geocoder geocoder = new Geocoder( getApplicationContext(), Locale.getDefault());
+        if(!Geocoder.isPresent())
+        {
+            Toast.makeText(getApplicationContext(), "Geocoder Not Present!", Toast.LENGTH_LONG).show();
+        }
+        try
+        {
+            List<Address> list = geocoder.getFromLocationName(location, 1);
+            Address address = list.get(0);
+
+            double lat = address.getLatitude();
+            double lng = address.getLongitude();
+
+            geodata = String.valueOf(lat) + "," + String.valueOf(lng);
+
+            //Toast.makeText(getApplicationContext(), geodata, Toast.LENGTH_LONG).show();
+
+        }catch (IOException e)
+        {
+            Log.e("IOException", e.getMessage());
+        }
+
+        return geodata;
+
     }
 }

@@ -1,8 +1,10 @@
 package com.android.mapnote;
 
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,6 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.android.mapnote.adapter.DBAdapter;
+
 
 /**
  * Created by Rafid Daoud on 12/3/2014.
@@ -37,8 +42,8 @@ public class LocationService extends Service
     {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 0, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, listener);
     }
 
     @Override
@@ -129,10 +134,15 @@ public class LocationService extends Service
 
     public class MyLocationListener implements LocationListener
     {
-
+        final DBAdapter db = new DBAdapter(getApplicationContext());
         public void onLocationChanged(final Location loc)
         {
             Log.i("**************************************", "Location changed");
+            //Toast methods to display database contents
+            db.open();
+            Cursor c = db.getAllReminders();
+            //displayCursor( c );
+            db.close();
             if(isBetterLocation(loc, previousBestLocation)) {
                 loc.getLatitude();
                 loc.getLongitude();
@@ -146,13 +156,13 @@ public class LocationService extends Service
 
         public void onProviderDisabled(String provider)
         {
-            Toast.makeText(getApplicationContext(), "Gps Disabled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS Disabled", Toast.LENGTH_SHORT).show();
         }
 
 
         public void onProviderEnabled(String provider)
         {
-            Toast.makeText( getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
+            Toast.makeText( getApplicationContext(), "GPS Enabled", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -161,5 +171,35 @@ public class LocationService extends Service
 
         }
 
+
+        private void displayCursor(Cursor c ){
+
+            if (c.moveToFirst())
+            {
+                do {
+                    displayContact(c);
+                } while (c.moveToNext());
+            }
+        }
+        private void displayContact( Cursor c )
+        {
+            Toast.makeText( getApplicationContext(),
+                    "id: " + c.getString(0) + "\n" +
+                            "Location: " + c.getString(1) + "\n" +
+                            "Item:  " + c.getString(2),
+                    Toast.LENGTH_LONG).show();
+        }
+
     }
+
+
+
+
+
+
+
+
+
+
+
 }

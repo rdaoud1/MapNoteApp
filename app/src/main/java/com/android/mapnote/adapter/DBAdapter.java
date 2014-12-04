@@ -21,6 +21,7 @@ public class DBAdapter {
     // String constants for the columns of a database table
     static final String KEY_ROWID = "_id";
     static final String KEY_LOCATION  = "location";
+    static final String KEY_CODE = "code";
     static final String KEY_ITEM = "item";
     static final String TAG       = "DBAdapter"; // for LogCat
 
@@ -32,7 +33,7 @@ public class DBAdapter {
     // SQL statement for creating a database schema
     static final String DATABASE_CREATE =
             "create table reminders ( _id integer primary key autoincrement, " +
-                    "location text not null, item text not null );";
+                    "location text not null, item text not null, code text not null );";
 
     final Context context;   // context for database access
 
@@ -100,11 +101,12 @@ public class DBAdapter {
 
     //--- 3. insert a contact into the database ---
     //       - ContentValues: key/value pairs
-    public long insertReminders(String name, String email)
+    public long insertReminders(String location, String item, String code)
     {
         ContentValues initialValues = new ContentValues();
-        initialValues.put( KEY_LOCATION, name );
-        initialValues.put( KEY_ITEM, email );
+        initialValues.put( KEY_LOCATION, location );
+        initialValues.put( KEY_ITEM, item );
+        initialValues.put( KEY_CODE, code );
 
         return db.insert( DATABASE_TABLE, null, initialValues );
     }
@@ -120,7 +122,7 @@ public class DBAdapter {
     public Cursor getAllReminders()
     {
         return db.query( DATABASE_TABLE,
-                new String[] { KEY_ROWID, KEY_LOCATION, KEY_ITEM },
+                new String[] { KEY_ROWID, KEY_LOCATION, KEY_ITEM, KEY_CODE },
                 null, null, null, null, null);
     }
 

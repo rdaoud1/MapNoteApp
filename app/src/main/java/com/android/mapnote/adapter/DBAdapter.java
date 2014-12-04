@@ -1,19 +1,12 @@
 package com.android.mapnote.adapter;
 
-/**
- * Created by Artemy on 20/11/2014.
- */
-    import android.content.ContentValues;
-    import android.content.Context;
-    import android.database.Cursor;
-    import android.database.SQLException;
-    import android.database.sqlite.SQLiteDatabase;
-    import android.database.sqlite.SQLiteOpenHelper;
-    import android.util.Log;
-
-/* Source: textbook by Wei Ming Lee
- * Enhanced and Annotated by Peter Liu
- */
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 // a user-defined helper class to access an SQLite database
 public class DBAdapter {
@@ -81,25 +74,21 @@ public class DBAdapter {
         }
     }// end DatabseHelper
 
-    /* 7 database access methods:
-     *   open(), close(), insertContact(), deleteContact(), getAllContacts(),
-     *   getContact(), updateContact()
-     */
 
-    //--- 1. open the database of contacts ---
+    //--- 1. open the database of reminders ---
     public DBAdapter open() throws SQLException
     {
         db = dBHelper.getWritableDatabase();
         return this;
     }
 
-    //--- 2. closes the database of contacts ---
+    //--- 2. closes the database of reminders ---
     public void close()
     {
         dBHelper.close();
     }
 
-    //--- 3. insert a contact into the database ---
+    //--- 3. insert a reminder into the database ---
     //       - ContentValues: key/value pairs
     public long insertReminders(String location, String item, String code)
     {
@@ -111,13 +100,13 @@ public class DBAdapter {
         return db.insert( DATABASE_TABLE, null, initialValues );
     }
 
-    //--- 4. deletes a particular contact from the database ---
+    //--- 4. deletes a particular reminder from the database ---
     public boolean deleteReminders(String location)
     {
         return db.delete( DATABASE_TABLE, KEY_LOCATION + " = ?", new String[] { location }) > 0;
     }
 
-    //---5. retrieves all the contacts from the databsae ---
+    //---5. retrieves all the reminders from the database ---
     //      - Cursor object: a pointer to the result set of the query
     public Cursor getAllReminders()
     {
@@ -126,7 +115,7 @@ public class DBAdapter {
                 null, null, null, null, null);
     }
 
-    //--- 6. retrieve a particular contact from the database ---
+    //--- 6. retrieve a particular reminder from the database ---
     //       - Cursor object: a pointer to the result set of the query
     public Cursor getReminder(String location) throws SQLException
     {
@@ -139,39 +128,33 @@ public class DBAdapter {
                         null, null, null, null);
 
         if ( mCursor != null ) { mCursor.moveToFirst(); } // move the cursor to the first row
-        //Log.d("cursor",mCursor.getString(mCursor.getColumnIndex("item")));
+
         return mCursor;
     }
 
+    //--- 7. retrieve all locations from the database ---
+    //       - Cursor object: a pointer to the result set of the query
     public Cursor getLocations() throws SQLException
     {
         Cursor mCursor =
                 db.rawQuery("SELECT DISTINCT location FROM reminders", null);
 
         if ( mCursor != null ) { mCursor.moveToFirst(); } // move the cursor to the first row
-        //Log.d("cursor",mCursor.getString(mCursor.getColumnIndex("item")));
+
         return mCursor;
     }
 
 
+    //--- 8. retrieve all locations and geodata from the database ---
+    //       - Cursor object: a pointer to the result set of the query
     public Cursor getLocationsAndGeo() throws SQLException
     {
         Cursor mCursor =
                 db.rawQuery("SELECT DISTINCT location, code FROM reminders", null);
 
         if ( mCursor != null ) { mCursor.moveToFirst(); } // move the cursor to the first row
-        //Log.d("cursor",mCursor.getString(mCursor.getColumnIndex("item")));
+
         return mCursor;
     }
 
-
-    //--- 7. updates a contact in the database ---
-    public boolean updateReminder(long rowId, String location, String item)
-    {
-        ContentValues args = new ContentValues();  // key/value pairs
-        args.put(KEY_LOCATION, location);
-        args.put(KEY_ITEM, item);
-
-        return db.update( DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
-    }
 } // end DBAdapter

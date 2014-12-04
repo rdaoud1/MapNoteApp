@@ -8,11 +8,11 @@
         android:showAsAction="always"
         android:title="@string/action_help"/>
 
-    <item
-        android:id="@+id/menu_map"
-        android:icon="@android:drawable/ic_menu_mapmode"
-        android:orderInCategory="2"
-        android:showAsAction="always"
-        android:title="@string/action_map"/>
+    <!--<item-->
+        <!--android:id="@+id/menu_map"-->
+        <!--android:icon="@android:drawable/ic_menu_mapmode"-->
+        <!--android:orderInCategory="2"-->
+        <!--android:showAsAction="always"-->
+        <!--android:title="@string/action_map"/>-->
 
 </menu>

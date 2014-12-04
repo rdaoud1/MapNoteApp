@@ -1,6 +1,9 @@
 package com.android.mapnote;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +11,15 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.mapnote.adapter.DBAdapter;
+
+import java.util.Locale;
 
 
 /**
@@ -140,9 +146,7 @@ public class LocationService extends Service
             Log.i("**************************************", "Location changed");
             //Toast methods to display database contents
             db.open();
-            Cursor c = db.getAllReminders();
-            //displayCursor( c );
-            db.close();
+
             if(isBetterLocation(loc, previousBestLocation)) {
                 loc.getLatitude();
                 loc.getLongitude();
@@ -151,7 +155,72 @@ public class LocationService extends Service
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
 
+                Cursor c = db.getLocationsAndGeo();
+
+                float[] result = new float[1];
+                double lat, lon;
+
+                if (c.moveToFirst())
+                {
+                    do {
+
+                        String locationName = c.getString(0); // location
+                        String[] geocode = c.getString(1).split(","); // geo code
+
+                        lat = Double.parseDouble(geocode[0]);
+                        lon = Double.parseDouble(geocode[1]);
+
+
+                        // start lat, start long, end lat, end long
+                        Location.distanceBetween(loc.getLatitude(), loc.getLongitude(), lat, lon, result);
+
+                        if(result[0] <= 5001.00)
+                        {
+
+                            String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, lon);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            //getApplicationContext().startActivity(intent);
+
+                            // build a pending intent
+                            PendingIntent pIntent = PendingIntent.getActivity( getApplicationContext(),     // the context for starting the activity
+                                                                                0,        // private request code for the SENDER
+                                                                                intent,   // intent of the activity to be LAUNCED
+                                                                                PendingIntent.FLAG_UPDATE_CURRENT ); // flag
+
+                            // build a notification (use of Notification.Builder)
+                            Notification notf = new Notification.Builder(getApplicationContext())
+
+                                    .setSmallIcon(R.drawable.ic_launcher)   // 1. icon at the status bar
+                                    .setTicker( "MapNote" )                 // 2. ticker text at the status bar
+                                    .setContentTitle("MapNote")           // 3. notification title text
+                                    .setContentText(locationName) // 4. notification body/detail text
+                                    .setContentIntent(pIntent)            // 5. primary action via a pending intent
+                                    .setAutoCancel(true).build();         // 6. automatic removal of a notification!!!
+
+                            // system service/platform service: NOTIFICATION_SERVICE
+                            NotificationManager notificationManager =
+                                    (NotificationManager) getSystemService( NOTIFICATION_SERVICE );
+
+                            notificationManager.notify( 0, notf );  // notification ID: 0
+
+
+
+                        }
+                        else
+                        {
+                            //Toast.makeText(getApplicationContext(), "NO Notification", Toast.LENGTH_LONG).show();
+                        }
+
+
+
+                    } while (c.moveToNext());
+                }
+
+
+
+
             }
+            db.close();
         }
 
         public void onProviderDisabled(String provider)

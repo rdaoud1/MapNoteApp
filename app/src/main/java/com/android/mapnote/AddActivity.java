@@ -68,7 +68,7 @@ public class AddActivity extends FragmentActivity {
                 for(int i = 1; i < rems.size(); i++)
                     id = db.insertReminders(rems.get(0), rems.get(i), geodata);
                 Cursor c = db.getAllReminders();
-                displayCursor( c );
+                //displayCursor( c );
                 db.close();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);

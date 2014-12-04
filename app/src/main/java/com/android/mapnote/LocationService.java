@@ -27,6 +27,7 @@ import java.util.Locale;
  */
 public class LocationService extends Service
 {
+    public final static String EXTRA_MESSAGE = "com.android.mapnote.MESSAGE";
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     public LocationManager locationManager;
@@ -48,8 +49,8 @@ public class LocationService extends Service
     {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, listener);
     }
 
     @Override
@@ -155,10 +156,15 @@ public class LocationService extends Service
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
 
-                Cursor c = db.getLocationsAndGeo();
+
 
                 float[] result = new float[1];
                 double lat, lon;
+                int counter = 0;
+                Cursor c = db.getLocationsAndGeo();
+                //displayCursor(c);
+
+
 
                 if (c.moveToFirst())
                 {
@@ -167,42 +173,57 @@ public class LocationService extends Service
                         String locationName = c.getString(0); // location
                         String[] geocode = c.getString(1).split(","); // geo code
 
+                        Log.d("#######################", c.getString(0));
+                        Log.d("#######################", c.getString(1));
+
                         lat = Double.parseDouble(geocode[0]);
                         lon = Double.parseDouble(geocode[1]);
-
 
                         // start lat, start long, end lat, end long
                         Location.distanceBetween(loc.getLatitude(), loc.getLongitude(), lat, lon, result);
 
+                        //startActivity(intent);//
+                        Log.d("dddddddddddddddddddddddd", Float.toString(result[0]));
                         if(result[0] <= 5001.00)
                         {
-
-                            String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, lon);
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:<lat>,<long>?q=<lat>,<long>(Label+Name)"));
+                            String uri = "geo:" + lat + "," + lon + "?q=" + lat + "," + lon + "(" + locationName + ")";
+                            Intent intentMap = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            Intent intentApp = new Intent(getApplicationContext(), RemindersActivity.class);
+                            intentApp.putExtra(EXTRA_MESSAGE, c.getString(0));
                             //getApplicationContext().startActivity(intent);
 
                             // build a pending intent
-                            PendingIntent pIntent = PendingIntent.getActivity( getApplicationContext(),     // the context for starting the activity
+                            PendingIntent pIntentMap = PendingIntent.getActivity( getApplicationContext(),     // the context for starting the activity
                                                                                 0,        // private request code for the SENDER
-                                                                                intent,   // intent of the activity to be LAUNCED
+                                                                                intentMap,   // intent of the activity to be LAUNCED
+                                                                                PendingIntent.FLAG_UPDATE_CURRENT ); // flag
+
+                            PendingIntent pIntentApp = PendingIntent.getActivity( getApplicationContext(),     // the context for starting the activity
+                                                                                0,        // private request code for the SENDER
+                                                                                intentApp,   // intent of the activity to be LAUNCED
                                                                                 PendingIntent.FLAG_UPDATE_CURRENT ); // flag
 
                             // build a notification (use of Notification.Builder)
                             Notification notf = new Notification.Builder(getApplicationContext())
 
-                                    .setSmallIcon(R.drawable.ic_launcher)   // 1. icon at the status bar
+                                    .setSmallIcon(R.drawable.globe)   // 1. icon at the status bar
                                     .setTicker( "MapNote" )                 // 2. ticker text at the status bar
                                     .setContentTitle("MapNote")           // 3. notification title text
                                     .setContentText(locationName) // 4. notification body/detail text
-                                    .setContentIntent(pIntent)            // 5. primary action via a pending intent
-                                    .setAutoCancel(true).build();         // 6. automatic removal of a notification!!!
+                                    .setContentIntent(pIntentApp)            // 5. primary action via a pending intent
+                                    .setAutoCancel(true)
+                                    .addAction(android.R.drawable.ic_menu_mapmode, "Map", pIntentMap)
+                                    .build();         // 6. automatic removal of a notification!!!
+
+
 
                             // system service/platform service: NOTIFICATION_SERVICE
                             NotificationManager notificationManager =
                                     (NotificationManager) getSystemService( NOTIFICATION_SERVICE );
 
-                            notificationManager.notify( 0, notf );  // notification ID: 0
-
+                            notificationManager.notify( counter, notf );  // notification ID: 0
+                            counter++;
 
 
                         }
@@ -253,21 +274,12 @@ public class LocationService extends Service
         private void displayContact( Cursor c )
         {
             Toast.makeText( getApplicationContext(),
-                    "id: " + c.getString(0) + "\n" +
-                            "Location: " + c.getString(1) + "\n" +
-                            "Item:  " + c.getString(2),
-                    Toast.LENGTH_LONG).show();
+                "Location: " + c.getString(0) + "\n" +
+                "Code: " + c.getString(1),
+                Toast.LENGTH_LONG).show();
         }
 
     }
-
-
-
-
-
-
-
-
 
 
 

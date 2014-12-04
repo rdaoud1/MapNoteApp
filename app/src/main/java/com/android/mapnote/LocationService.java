@@ -18,6 +18,11 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+/* We have based this file on the following link but we have modified quite a bit of code so that
+* it would work with the use cases that we have proposed
+* http://stackoverflow.com/questions/14478179/background-service-with-location-listener-in-android
+* */
+
 public class LocationService extends Service
 {
     public final static String EXTRA_MESSAGE = "com.android.mapnote.MESSAGE";
@@ -28,13 +33,11 @@ public class LocationService extends Service
     public MyLocationListener listener;
     public Location previousBestLocation = null;
 
-    Intent intent;
     int counter = 0;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        //intent = new Intent(BROADCAST_ACTION);
     }
 
     // initial start up of the service

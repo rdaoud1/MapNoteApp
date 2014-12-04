@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/* Used this Class form the code given in class and we added some more functionality */
+
+
 // a user-defined helper class to access an SQLite database
 public class DBAdapter {
 

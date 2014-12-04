@@ -98,9 +98,6 @@ public class MainActivity extends ListActivity {
                 Intent intent = new Intent(this, AddActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.menu_map:
-                Toast.makeText(this, "Settings Clicked", Toast.LENGTH_LONG).show();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
